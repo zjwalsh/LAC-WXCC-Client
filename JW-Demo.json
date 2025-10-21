@@ -1,0 +1,226 @@
+{
+    "agent": {
+        "version": "0.1.0",
+        "appTitle": "Webex Contact Center",
+        "logo": "",
+        "stopNavigateOnAcceptTask": false,
+        "dragDropEnabled": false,
+        "notificationTimer": 8,
+        "maximumNotificationCount": 3,
+        "browserNotificationTimer": 8,
+        "wxmConfigured": false,
+        "desktopChatApp": {
+            "webexConfigured": false
+        },
+        "area": {
+            "advancedHeader": [
+                {
+                    "comp": "digital-outbound",
+                    "script": "https://wc.imiengage.io/AIC/engage_aic.js",
+                    "attributes": {
+                        "darkmode": "$STORE.app.darkMode",
+                        "accessToken": "$STORE.auth.accessToken",
+                        "orgId": "$STORE.agent.orgId",
+                        "dataCenter": "$STORE.app.datacenter",
+                        "emailCount": "$STORE.agent.channels.emailCount",
+                        "socialCount": "$STORE.agent.channels.socialCount"
+                    }
+                },
+                {
+                    "comp": "link",
+                    "attributes": {
+                        "rel": "stylesheet",
+                        "href": "https://ubuntu-vmware-virtual-platform.tail4794a2.ts.net/tsforms-widget.styles.css"
+                    }
+                },
+                {
+                    "comp": "script",
+                    "attributes": {
+                        "src": "https://ubuntu-vmware-virtual-platform.tail4794a2.ts.net/tsforms-widget.bundle.js",
+                        "type": "module",
+                        "crossorigin": "anonymous"
+                    }
+                },
+                {
+                    "comp": "ai-assistant"
+                },
+                {
+                    "comp": "agentx-webex"
+                },
+                {
+                    "comp": "agentx-outdial"
+                },
+                {
+                    "comp": "agentx-notification"
+                },
+                {
+                    "comp": "agentx-state-selector"
+                }
+            ],
+            "panel": {
+                "comp": "md-tabs",
+                "attributes": {
+                    "class": "widget-tabs"
+                },
+                "children": [
+                    {
+                        "comp": "md-tab",
+                        "attributes": {
+                            "slot": "tab",
+                            "class": "widget-pane-tab"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "IVR_TRANSCRIPT_TAB"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "comp": "md-tab-panel",
+                        "attributes": {
+                            "slot": "panel",
+                            "class": "widget-pane"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "IVR_TRANSCRIPT"
+                                }
+                            }
+                        ],
+                        "visibility": "IVR_TRANSCRIPT"
+                    },
+                    {
+                        "comp": "md-tab",
+                        "attributes": {
+                            "slot": "tab",
+                            "class": "widget-pane-tab"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "CUSTOMER_JOURNEY_WIDGET_TAB"
+                                }
+                            }
+                        ],
+                        "visibility": "CUSTOMER_JOURNEY_WIDGET"
+                    },
+                    {
+                        "comp": "md-tab-panel",
+                        "attributes": {
+                            "slot": "panel",
+                            "class": "widget-pane"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "CUSTOMER_JOURNEY_WIDGET"
+                                }
+                            }
+                        ],
+                        "visibility": "CUSTOMER_JOURNEY_WIDGET"
+                    },
+                    {
+                        "comp": "md-tab",
+                        "attributes": {
+                            "slot": "tab"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "WXM_JOURNEY_TAB"
+                                }
+                            }
+                        ],
+                        "visibility": "WXM_JOURNEY"
+                    },
+                    {
+                        "comp": "md-tab-panel",
+                        "attributes": {
+                            "slot": "panel",
+                            "class": "widget-pane"
+                        },
+                        "children": [
+                            {
+                                "comp": "agentx-wc-cloudcherry-widget",
+                                "properties": {
+                                    "userModel": "$STORE.app.userModel",
+                                    "spaceId": "",
+                                    "metricsId": "",
+                                    "ani": "$STORE.agentContact.taskSelected.ani",
+                                    "isDarkMode": "$STORE.app.darkMode"
+                                },
+                                "wrapper": {
+                                    "title": "Customer Experience Journey",
+                                    "maximizeAreaName": "app-maximize-area"
+                                }
+                            }
+                        ],
+                        "visibility": "WXM_JOURNEY"
+                    },
+                    {
+                        "comp": "md-tab",
+                        "attributes": {
+                            "slot": "tab",
+                            "class": "widget-pane-tab"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "TS_FORMS_TAB"
+                                }
+                            }
+                        ],
+                        "visibility": "TS_FORMS"
+                    },
+                    {
+                        "comp": "md-tab-panel",
+                        "attributes": {
+                            "slot": "panel",
+                            "class": "widget-pane"
+                        },
+                        "children": [
+                            {
+                                "comp": "webex-tsforms-widget",
+                                "attributes": {
+                                    "style": "width: 100%; height: 100%; display: block;",
+                                    "id": "tsforms-widget-instance"
+                                },
+                                "properties": {
+                                    "store": "$STORE",
+                                    "TaskId": "$STORE.agentContact.selectedTaskId"
+                                }
+                            }
+                        ],
+                        "visibility": "TS_FORMS"
+                    },
+                    {
+                        "comp": "md-tab",
+                        "attributes": {
+                            "slot": "tab",
+                            "class": "widget-pane-tab"
+                        },
+                        "children": [
+                            {
+                                "comp": "slot",
+                                "attributes": {
+                                    "name": "SCREEN_POP_TAB"
+                                }
+                            }
+                        ],
+                        "visibility": "SCREEN_POP"
+                    }
+                ]
+            },
+            "navigation": []
+        }
+    }
+}
