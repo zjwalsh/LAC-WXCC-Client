@@ -1,0 +1,33 @@
+ INFO  Accepting connections at http://localhost:8443
+ HTTP  11/11/2025 8:16:20 AM 127.0.0.1 GET /static/js/widget.bundle.js
+ HTTP  11/11/2025 8:16:20 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  11/11/2025 8:16:20 AM 127.0.0.1 Returned 304 in 3 ms
+ HTTP  11/11/2025 8:16:20 AM 127.0.0.1 Returned 304 in 40 ms
+ HTTP  11/11/2025 8:16:31 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  11/11/2025 8:16:31 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  11/11/2025 8:16:52 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 8:16:52 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 8:17:13 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 8:17:13 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 8:17:28 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 8:17:28 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 8:17:53 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 8:17:53 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 8:24:05 AM 127.0.0.1 GET /static/js/widget.bundle.js
+ HTTP  11/11/2025 8:24:05 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 8:24:05 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  11/11/2025 8:24:05 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  11/11/2025 8:24:07 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  11/11/2025 8:24:07 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  11/11/2025 8:28:19 AM 127.0.0.1 GET /static/js/widget.bundle.js
+ HTTP  11/11/2025 8:28:19 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 8:28:19 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  11/11/2025 8:28:19 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  11/11/2025 8:28:21 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  11/11/2025 8:28:21 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  11/11/2025 8:28:57 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 8:28:57 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  11/11/2025 9:34:42 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 9:34:42 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  11/11/2025 9:47:00 AM 127.0.0.1 GET /tsforms-widget.styles.css
+ HTTP  11/11/2025 9:47:00 AM 127.0.0.1 Returned 304 in 2 ms

@@ -36,6 +36,8 @@ class WebexTSFormsWidget extends HTMLElement {
     // handle property set as number/string/"null"/undefined
     if (val === undefined || val === null || val === 'null' || val === 'undefined' || val === '') {
       this._taskId = null;
+
+      
     } else {
       // if it's an object with id property, allow that too
       if (typeof val === 'object' && val !== null) {

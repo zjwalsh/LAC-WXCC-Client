@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "React frontend for TSForms application",
     "private": true,
-    "homepage": ".",
+    "homepage": "/",
     "dependencies": {
         "@wxcc-desktop/sdk": "^2.0.11",
         "@wxcc-desktop/sdk-types": "^1.0.28",
@@ -12,8 +12,9 @@
         "react-scripts": "^5.0.1"
     },
     "scripts": {
-        "start": "port=3001 react-scripts start",
+        "start": "PORT=8443 react-scripts start",
         "build": "react-scripts build",
+        "serve": "npx serve -s build -l 8443 --cors",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },

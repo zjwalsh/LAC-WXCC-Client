@@ -1,17 +1,50 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-// SDK will be loaded dynamically when available
-let Desktop = null;
+const WIDGET_HOST_FALLBACK = 'https://ubuntu-vmware-virtual-platform.tail4794a2.ts.net';
+
+const getBaseUrl = () => {
+  // 1. Check for environment variable (set during build)
+  if (process.env.REACT_APP_API_BASE) {
+    return process.env.REACT_APP_API_BASE;
+  }
+  
+  // 2. explicit override wins (set by host application)
+  if (typeof window !== 'undefined' && window.__TSFORMS_API_BASE__) {
+    return window.__TSFORMS_API_BASE__;
+  }
+  
+  // 3. infer from bundle/script at time of call
+  try {
+    const scripts = Array.from(document.getElementsByTagName('script')).reverse();
+    const bundle = scripts.find(s => s.src && s.src.includes('tsforms-widget.bundle'));
+    if (bundle && bundle.src) {
+      try {
+        const origin = new URL(bundle.src).origin;
+        // if origin looks like the desktop proxy, prefer fallback
+        if (origin.includes('desktop.wxcc-us1.cisco.com')) return WIDGET_HOST_FALLBACK;
+        return origin;
+      } catch (e) { /* ignore */ }
+    }
+    const cs = document.currentScript;
+    if (cs && cs.src) {
+      const origin = new URL(cs.src).origin;
+      if (origin.includes('desktop.wxcc-us1.cisco.com')) return WIDGET_HOST_FALLBACK;
+      return origin;
+    }
+  } catch (e) { /* ignore */ }
+  
+  // 4. last resort: use widget-host fallback
+  return WIDGET_HOST_FALLBACK;
+};
+
+// removed module-level BASE_URL to avoid stale inference
 
 export default function App(props) {
   // ============================================
   // WEBEX SDK STATE
   // ============================================
   const [taskId, setTaskId] = useState(null);
-  const [taskInfo, setTaskInfo] = useState({});
   const [agentInfo, setAgentInfo] = useState(null);
-  const [sdkActive, setSdkActive] = useState(false);
-  const [sdkError, setSdkError] = useState(null);
 
   // ============================================
   // FORM STATE
@@ -35,7 +68,6 @@ export default function App(props) {
     if (props) {
       if (props.taskId) {
         setTaskId(props.taskId);
-        setSdkActive(true);
         console.log('[App] Initialized taskId from props:', props.taskId);
       }
       if (props.store) {
@@ -44,7 +76,6 @@ export default function App(props) {
         const sTask = s?.agentContact?.selectedTaskId ?? s?.taskId;
         if (sTask && !props.taskId) {
           setTaskId(sTask);
-          setSdkActive(true);
           console.log('[App] Initialized taskId from props.store:', sTask);
         }
         if (s?.agent) setAgentInfo(s.agent);
@@ -63,13 +94,10 @@ export default function App(props) {
         if (!data) return;
 
         if (data.type === 'TASK_DATA') {
-          const { taskId: incomingTaskId, taskInfo: incomingTaskInfo, agentInfo: incomingAgentInfo } = data.payload || {};
+          const { taskId: incomingTaskId, agentInfo: incomingAgentInfo } = data.payload || {};
           if (incomingTaskId) {
             setTaskId(incomingTaskId);
-            setTaskInfo(incomingTaskInfo || {});
             setAgentInfo(incomingAgentInfo || null);
-            setSdkActive(true);
-            setSdkError(null);
             console.log('[React App] ✅ Task ID received:', incomingTaskId);
           }
         }
@@ -115,13 +143,8 @@ export default function App(props) {
 
     if (!formData.appnum_cdf) {
       newErrors.appnum_cdf = 'Application Number is required';
-    } else if (processType === 'YBN') {
-      if (!formData.appnum_cdf.match(/^LRS.{7,}/)) {
-        newErrors.appnum_cdf = 'Must start with LRS + 7 chars';
-      }
-    } else if (processType === 'LRS') {
-      if (formData.appnum_cdf.length < 8) {
-        newErrors.appnum_cdf = 'Must be at least 8 digits';
+      if (formData.appnum_cdf.length < 7) {
+        newErrors.appnum_cdf = 'Must be at least 7 digits';
       }
     }
 
@@ -135,8 +158,8 @@ export default function App(props) {
 
     if (processType === 'LRS' && !formData.casenum_cdf) {
       newErrors.casenum_cdf = 'Case Number is required for LRS';
-    } else if (processType === 'LRS' && !formData.casenum_cdf.match(/^LRS.{7,}/)) {
-      newErrors.casenum_cdf = 'Must start with LRS + 7 chars';
+    // } else if (processType === 'LRS' && !formData.casenum_cdf.match(/^LRS.{7,}/)) {
+    //   newErrors.casenum_cdf = 'Must start with LRS + 7 chars';
     }
 
     setErrors(newErrors);
@@ -170,19 +193,32 @@ export default function App(props) {
 
       console.log('Sending metadata:', metadata);
 
-      const response = await fetch('http://localhost:8443/telephonic-signature/pauseResume', {
+      const base = getBaseUrl();
+      const response = await fetch(`${base}/telephonic-signature/pauseResume`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ metadata })
+        body: JSON.stringify({ metadata }),
+        mode: 'cors'
       });
 
-      const result = await response.json();
+      if (!response.ok) {
+        const text = await response.text().catch(() => '<no body>');
+        console.error('pauseResume failed', response.status, text);
+        showAlert('error', text || `Server error ${response.status}`);
+        return;
+      }
 
-      if (result.success) {
+      // parse JSON safely
+      const result = await response.json().catch(async () => {
+        const txt = await response.text().catch(() => '<no body>');
+        throw new Error('Invalid JSON response: ' + txt);
+      });
+
+      if (result && result.success) {
         setRecording(true);
         showAlert('success', 'Recording started successfully');
       } else {
-        showAlert('error', result.error || 'Failed to start recording');
+        showAlert('error', (result && (result.error || result.message)) || 'Failed to start recording');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -194,24 +230,38 @@ export default function App(props) {
     const reason = disconnected ? 'disconnected' : 'manual';
 
     try {
-      const response = await fetch('http://localhost:8443/telephonic-signature/pauseResume', {
+      const base = getBaseUrl();
+      const response = await fetch(`${base}/telephonic-signature/pauseResume`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           metadata: {
             taskId: taskId,
             reason: reason,
             timestamp: new Date().toISOString()
           }
-        })
+        }),
+        mode: 'cors'
       });
 
-      const result = await response.json();
+      if (!response.ok) {
+        const text = await response.text().catch(() => '<no body>');
+        console.error('pauseResume stop failed', response.status, text);
+        showAlert('error', text || `Server error ${response.status}`);
+        return;
+      }
 
-      if (result.success) {
+      const result = await response.json().catch(async () => {
+        const txt = await response.text().catch(() => '<no body>');
+        throw new Error('Invalid JSON response: ' + txt);
+      });
+
+      if (result && result.success) {
         setRecording(false);
         const msg = disconnected ? 'Recording stopped - Call disconnected' : 'Recording stopped';
         showAlert('info', msg);
+      } else {
+        showAlert('error', (result && (result.error || result.message)) || 'Failed to stop recording');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -236,11 +286,11 @@ export default function App(props) {
 
   const handleProcessTypeChange = (value) => {
     setProcessType(value);
-    if (value === 'YBN') {
-      setFormData(prev => ({ ...prev, appnum_cdf: 'LRS', casenum_cdf: '' }));
-    } else if (value === 'LRS') {
-      setFormData(prev => ({ ...prev, appnum_cdf: '', casenum_cdf: 'LRS' }));
-    }
+    // if (value === 'YBN') {
+    //   setFormData(prev => ({ ...prev, appnum_cdf: 'LRS', casenum_cdf: '' }));
+    // } else if (value === 'LRS') {
+    //   setFormData(prev => ({ ...prev, appnum_cdf: '', casenum_cdf: 'LRS' }));
+    // }
   };
 
   const handleInputChange = (field, value) => {
@@ -255,7 +305,7 @@ export default function App(props) {
   };
 
   const isCaseMandatory = processType === 'LRS';
-  const appPlaceholder = processType === 'YBN' ? 'LRS0123456' : 'Application Number';
+  const appPlaceholder = processType === 'YBN' ? '0123456' : 'Application Number';
 
   // ============================================
   // RENDER
