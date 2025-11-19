@@ -191,15 +191,29 @@ export default function App(props) {
         timestamp: new Date().toISOString()
       };
 
-      console.log('Sending metadata:', metadata);
+      const payload = { metadata };
+      const bodyString = JSON.stringify(payload);
+      
+      console.log('=== START RECORDING DEBUG ===');
+      console.log('1. Metadata object:', metadata);
+      console.log('2. Payload object:', payload);
+      console.log('3. Body string (what will be sent):', bodyString);
+      console.log('4. Body string length:', bodyString.length);
 
       const base = getBaseUrl();
-      const response = await fetch(`${base}/telephonic-signature/pauseResume`, {
+      const url = `${base}/telephonic-signature/pauseResume`;
+      console.log('5. POST URL:', url);
+      
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ metadata }),
-        mode: 'cors'
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: bodyString
       });
+      
+      console.log('Response status:', response.status);
+      console.log('Response headers:', [...response.headers.entries()]);
 
       if (!response.ok) {
         const text = await response.text().catch(() => '<no body>');
@@ -231,18 +245,27 @@ export default function App(props) {
 
     try {
       const base = getBaseUrl();
-      const response = await fetch(`${base}/telephonic-signature/pauseResume`, {
+      const url = `${base}/telephonic-signature/pauseResume`;
+      const payload = {
+        metadata: {
+          taskId: taskId,
+          reason: reason,
+          timestamp: new Date().toISOString()
+        }
+      };
+      
+      console.log('Stop Recording - POST URL:', url);
+      console.log('Stop Recording - POST Body:', JSON.stringify(payload, null, 2));
+      
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          metadata: {
-            taskId: taskId,
-            reason: reason,
-            timestamp: new Date().toISOString()
-          }
-        }),
-        mode: 'cors'
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
       });
+      
+      console.log('Stop Response status:', response.status);
 
       if (!response.ok) {
         const text = await response.text().catch(() => '<no body>');
