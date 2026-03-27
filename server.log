@@ -1,0 +1,27 @@
+ INFO  Accepting connections at http://localhost:8443
+ HTTP  12/15/2025 9:16:53 AM 127.0.0.1 GET /
+ HTTP  12/15/2025 9:16:53 AM 127.0.0.1 Returned 200 in 28 ms
+ HTTP  12/15/2025 9:16:53 AM 127.0.0.1 GET /static/css/main.4b78de22.css
+ HTTP  12/15/2025 9:16:53 AM 127.0.0.1 GET /static/js/main.38d20c27.js
+ HTTP  12/15/2025 9:16:53 AM 127.0.0.1 Returned 304 in 3 ms
+ HTTP  12/15/2025 9:16:53 AM 127.0.0.1 Returned 304 in 3 ms
+ HTTP  12/15/2025 9:16:54 AM 127.0.0.1 GET /favicon.ico
+ HTTP  12/15/2025 9:16:54 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  12/15/2025 9:18:37 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:18:37 AM 127.0.0.1 GET /static/js/widget.bundle.js
+ HTTP  12/15/2025 9:18:37 AM 127.0.0.1 Returned 200 in 5 ms
+ HTTP  12/15/2025 9:18:37 AM 127.0.0.1 Returned 200 in 5 ms
+ HTTP  12/15/2025 9:18:39 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:18:39 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  12/15/2025 9:18:45 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:18:45 AM 127.0.0.1 Returned 304 in 2 ms
+ HTTP  12/15/2025 9:18:45 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:18:45 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  12/15/2025 9:19:24 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:19:24 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  12/15/2025 9:27:02 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:27:02 AM 127.0.0.1 Returned 304 in 1 ms
+ HTTP  12/15/2025 9:43:51 AM 127.0.0.1 GET /static/css/widget.styles.css
+ HTTP  12/15/2025 9:43:51 AM 127.0.0.1 Returned 304 in 0 ms
+
+ INFO  Gracefully shutting down. Please wait...
