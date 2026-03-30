@@ -75,7 +75,7 @@ class WebexTSFormsWidget extends HTMLElement {
   _injectStylesheet(href = null) {
     // Inject CSS into shadow root when available, otherwise into document
   // Use the stable copied stylesheet path produced by deploy script
-  const cssHref = href || 'https://staging.d396jdmxj9hsxl.amplifyapp.com/static/css/widget.styles.css';
+  const cssHref = href || 'https://staging.d3pbfqt9mklwfw.amplifyapp.com/static/css/widget.styles.css';
 
     // If we have a shadow root, try to fetch CSS and inject into the shadow root
     if (this._shadow) {

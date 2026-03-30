@@ -8,6 +8,16 @@ param(
 $BuildDir = "$PSScriptRoot\build"
 $ZipPath = "$PSScriptRoot\build.zip"
 
+Write-Host "Creating stable bundle filenames..."
+$jsBundle = Get-Item "$BuildDir\static\js\main.*.js" | Where-Object { $_.Name -notlike "*.map" -and $_.Name -notlike "*.LICENSE.txt" } | Select-Object -First 1
+$cssBundle = Get-Item "$BuildDir\static\css\main.*.css" | Where-Object { $_.Name -notlike "*.map" } | Select-Object -First 1
+if (-not $jsBundle) { Write-Error "Could not find main.*.js in $BuildDir\static\js"; exit 1 }
+if (-not $cssBundle) { Write-Error "Could not find main.*.css in $BuildDir\static\css"; exit 1 }
+Copy-Item $jsBundle.FullName "$BuildDir\static\js\widget.bundle.js" -Force
+Copy-Item $cssBundle.FullName "$BuildDir\static\css\widget.styles.css" -Force
+Write-Host "Copied $($jsBundle.Name) -> widget.bundle.js"
+Write-Host "Copied $($cssBundle.Name) -> widget.styles.css"
+
 Write-Host "Creating zip with correct forward-slash paths..."
 Remove-Item $ZipPath -ErrorAction SilentlyContinue
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -22,9 +32,12 @@ $zip.Dispose()
 Write-Host "Zip created: $ZipPath"
 
 Write-Host "Creating Amplify deployment..."
-$deploy = aws amplify create-deployment --app-id $AppId --branch-name $Branch --region $Region --profile $Profile | ConvertFrom-Json
+$deployRaw = aws amplify create-deployment --app-id $AppId --branch-name $Branch --region $Region --profile $Profile
+Write-Host "Raw response: $deployRaw"
+$deploy = $deployRaw | ConvertFrom-Json
 $jobId = $deploy.jobId
 $uploadUrl = $deploy.zipUploadUrl
+if (-not $uploadUrl) { Write-Error "zipUploadUrl is null. Check the raw response above."; exit 1 }
 Write-Host "Job ID: $jobId"
 
 Write-Host "Uploading zip..."

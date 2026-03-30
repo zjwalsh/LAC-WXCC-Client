@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from 'react';
 
-const WIDGET_HOST_FALLBACK = 'https://ubuntu-vmware-virtual-platform.tail4794a2.ts.net';
+const WIDGET_HOST_FALLBACK = 'https://staging.d3pbfqt9mklwfw.amplifyapp.com';
 
 const getBaseUrl = () => {
   // 1. Check for environment variable (set during build)
